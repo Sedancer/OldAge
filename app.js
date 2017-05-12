@@ -6,9 +6,10 @@
     'use strict';
     class OldAge{
 
-        constructor( {el, data = {imgLeft : './img/imgl.jpg', imgRight : './img/imgr.jpg' }}) {
+        constructor( {el, data = {imgLeft : './img/imgl.jpg', imgRight : './img/imgr.jpg' } }) {
             this.el = el;
             this.data = data; // входящие данные
+            this.initEvents()
         };
         _getCoords(el){
             console.log( el);
@@ -18,60 +19,62 @@
                     left: wrap.left + pageXOffset
                }
         }
+        initEvents(){
+            this.el.addEventListener('mousedown',  this._mousedown.bind(this));
+
+        }
 
 
         _setImg( num){
-            let elem = document.getElementsByClassName('old__imgRight')[0];
-            elem.style.left =`-${num}px`;
-            elem.firstChild.style.left =`${num}px`;
 
-            document.getElementsByClassName('thumb')[0].style.right =`${num-15}px`;
         }
 
-        _mousedown(){
-            let  aaa =  this._getCoords( this.thumb )
-            console.log( aaa);
+        _mousedown(event){
+
+            let sliderElem = document.getElementsByClassName('old__imgRight')[0];
+            let thumbElem = document.getElementsByClassName('thumb')[0];
+            let thumbCoords = this._getCoords(thumbElem);
+            let sliderCoords = this._getCoords(sliderElem);
+            let shiftX = event.pageX - thumbCoords.left;
+
+
+
+            thumbElem.addEventListener('mousemove',  this._mousemove.bind(this));
+
+
+
+
+        }
+        _mousemove(event){
+            let sliderElem = document.getElementsByClassName('old__imgRight')[0];
+            let thumbElem = document.getElementsByClassName('thumb')[0];
+            let thumbCoords = this._getCoords(thumbElem);
+            let sliderCoords = this._getCoords(sliderElem);
+            let shiftX = event.pageX - thumbCoords.left;
+
+            let newLeft = event.pageX - shiftX - sliderCoords.left;
+            // курсор ушёл вне слайдера
+            if (newLeft < 0) {
+                newLeft = 0;
+            }
+            let rightEdge = sliderElem.offsetWidth - thumbElem.offsetWidth;
+            if (newLeft > rightEdge) {
+                newLeft = rightEdge;
+            }
+            console.log(newLeft);
+
+
+
+            sliderElem.style.left =`-${newLeft}px`;
+            sliderElem.firstChild.style.left =`${newLeft}px`;
+
+            thumbElem.style.right =`${newLeft-15}px`;
+
+
+
         }
 
 
-        _swip(){
-
-            this.el.addEventListener( "mousedown" ,  this._mousedown());
-
-            //let thumbElem =  document.getElementsByClassName('thumb')[0];
-            //thumbElem.onmousedown = function(e) {
-            //    var thumbCoords = _getCoords(thumbElem);
-            //
-            //
-            //
-            //    var shiftX = e.pageX - thumbCoords.left;
-            //    // shiftY здесь не нужен, слайдер двигается только по горизонтали
-            //
-            //    var sliderCoords = _getCoords(sliderElem);
-            //
-            //    document.onmousemove = function(e) {
-            //        //  вычесть координату родителя, т.к. position: relative
-            //        var newLeft = e.pageX - shiftX - sliderCoords.left;
-            //
-            //        // курсор ушёл вне слайдера
-            //        if (newLeft < 0) {
-            //            newLeft = 0;
-            //        }
-            //        var rightEdge = sliderElem.offsetWidth - thumbElem.offsetWidth;
-            //        if (newLeft > rightEdge) {
-            //            newLeft = rightEdge;
-            //        }
-            //
-            //        thumbElem.style.left = newLeft + 'px';
-            //    }
-            //
-            //    document.onmouseup = function() {
-            //        document.onmousemove = document.onmouseup = null;
-            //    };
-            //
-            //    return false; // disable selection start (cursor change)
-            //};
-        }
 
   render (){
     let imgLeft = this.data.imgLeft;
@@ -93,57 +96,6 @@ let sly = new OldAge({
 });
 sly.render();
 //sly._getCoords();
-
-sly._setImg( 300);
-
-sly._swip();
+// sly._setImg( 300);
 
 
-
-
-
-//thumbElem.onmousedown = function(e) {
-//    var thumbCoords = getCoords(thumbElem);
-//    var shiftX = e.pageX - thumbCoords.left;
-//    // shiftY здесь не нужен, слайдер двигается только по горизонтали
-//
-//    var sliderCoords = getCoords(sliderElem);
-//
-//    document.onmousemove = function(e) {
-//        //  вычесть координату родителя, т.к. position: relative
-//        var newLeft = e.pageX - shiftX - sliderCoords.left;
-//
-//        // курсор ушёл вне слайдера
-//        if (newLeft < 0) {
-//            newLeft = 0;
-//        }
-//        var rightEdge = sliderElem.offsetWidth - thumbElem.offsetWidth;
-//        if (newLeft > rightEdge) {
-//            newLeft = rightEdge;
-//        }
-//
-//        thumbElem.style.left = newLeft + 'px';
-//    }
-//
-//    document.onmouseup = function() {
-//        document.onmousemove = document.onmouseup = null;
-//    };
-//
-//    return false; // disable selection start (cursor change)
-//};
-//
-
-//thumbElem.ondragstart = function() {
-//    return false;
-//};
-//
-//function getCoords(elem) { // кроме IE8-
-//    var box = elem.getBoundingClientRect();
-//
-//    return {
-//        top: box.top + pageYOffset,
-//        left: box.left + pageXOffset
-//    };
-//
-//}
-//
