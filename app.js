@@ -11,8 +11,8 @@
             this.data = data; // входящие данные
             this.initEvents()
         };
+
         _getCoords(el){
-            console.log( el);
             let wrap = el.getBoundingClientRect();
                return {
                     top: wrap.top + pageYOffset,
@@ -25,23 +25,28 @@
         }
 
 
-        _setImg( num){
+        _setImg(newLeft){
+            document.getElementsByClassName('old__imgRight')[0].style.left =`-${newLeft}px`;
+            document.getElementsByClassName('old__imgRight')[0].firstChild.style.left =`${newLeft}px`;
+            document.getElementsByClassName('thumb')[0].style.right =`${newLeft-15}px`;
 
         }
 
         _mousedown(event){
 
-            let sliderElem = document.getElementsByClassName('old__imgRight')[0];
-            let thumbElem = document.getElementsByClassName('thumb')[0];
+            let thumbElem = document.getElementsByClassName('old__imgRight')[0];
+            let sliderElem  = document.getElementsByClassName('thumb')[0];
             let thumbCoords = this._getCoords(thumbElem);
             let sliderCoords = this._getCoords(sliderElem);
             let shiftX = event.pageX - thumbCoords.left;
 
-
+            console.log('thumbCoords: '+  thumbCoords);
+            console.log('sliderCoords: '+  sliderCoords);
+            console.log('shiftX: '+  shiftX);
 
             thumbElem.addEventListener('mousemove',  this._mousemove.bind(this));
 
-
+            this._setImg(shiftX)
 
 
         }
@@ -51,8 +56,13 @@
             let thumbCoords = this._getCoords(thumbElem);
             let sliderCoords = this._getCoords(sliderElem);
             let shiftX = event.pageX - thumbCoords.left;
+            console.log('thumbCoords: '+  thumbCoords);
+            console.log('sliderCoords: '+  sliderCoords);
+            console.log('shiftX: '+  shiftX);
 
             let newLeft = event.pageX - shiftX - sliderCoords.left;
+
+            console.log('newLeft: '+  newLeft);
             // курсор ушёл вне слайдера
             if (newLeft < 0) {
                 newLeft = 0;
@@ -65,11 +75,7 @@
 
 
 
-            sliderElem.style.left =`-${newLeft}px`;
-            sliderElem.firstChild.style.left =`${newLeft}px`;
-
-            thumbElem.style.right =`${newLeft-15}px`;
-
+            this._setImg(newLeft)
 
 
         }
