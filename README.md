@@ -1,4 +1,4 @@
-# OldAge Slider
+# ImageCompare Slider
 
 Interactive "Before/After" image slider to compare two images. Drag the slider to reveal the right image over the left image.
 
